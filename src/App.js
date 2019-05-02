@@ -4,11 +4,12 @@ import Search from "./components/Search";
 import Result from "./components/Result";
 import Footer from "./components/Footer";
 import { connect } from 'react-redux';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import { fetchData, clearData } from './redux/actions/actions';
 
 class App extends Component {
-
+    
     state = {
         searchPhrase: '',
         footerText: 'TV Maze API'
@@ -24,19 +25,20 @@ class App extends Component {
         this.props.clear();
     };
 
+    
     render() {
         return (
-            <div>
-                <Search searchPhrase={this.state.searchPhrase} input={this.input}/>
-                <Result
+            <BrowserRouter>
+                <Route path="/" render={props => <Search searchPhrase={this.state.searchPhrase} input={this.input}/>} />
+                <Route path="/result" render={props => <Result
                     searchPhrase={this.state.searchPhrase}
                     clearSearch={this.clearSearch}
                     result={this.props.result}
                     error={this.props.error}
-                    isLoading={this.props.isLoading}
-                />
-                <Footer text={this.state.footerText}/>
-            </div>
+                    isLoading={this.props.isLoading} />}
+                 />
+                <Route path="/footer" render={props => <Footer text={this.state.footerText}/>} />
+            </BrowserRouter>
         );
     }
 }
