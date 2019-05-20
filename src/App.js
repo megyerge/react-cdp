@@ -3,8 +3,9 @@ import './App.css';
 import Search from "./components/Search";
 import Result from "./components/Result";
 import Footer from "./components/Footer";
-import { connect } from 'react-redux';
-import { BrowserRouter, Route } from 'react-router-dom';
+import Error from "./components/Error";
+import {connect, Provider} from 'react-redux';
+import {Route, Switch} from 'react-router-dom';
 
 import { fetchData, clearData } from './redux/actions/actions';
 
@@ -27,18 +28,26 @@ class App extends Component {
 
     
     render() {
+        const {Router, location, store} = this.props;
         return (
-            <BrowserRouter>
-                <Route path="/" render={props => <Search searchPhrase={this.state.searchPhrase} input={this.input}/>} />
-                <Route path="/result" render={props => <Result
-                    searchPhrase={this.state.searchPhrase}
-                    clearSearch={this.clearSearch}
-                    result={this.props.result}
-                    error={this.props.error}
-                    isLoading={this.props.isLoading} />}
-                 />
-                <Route path="/footer" render={props => <Footer text={this.state.footerText}/>} />
-            </BrowserRouter>
+            <Provider store={store}>
+                <Router location={location}>
+                    <Switch>
+                        <Route path="/" exact render={props => <Search searchPhrase={this.state.searchPhrase} input={this.input}/>} />
+                        <Route path="/result" render={props => <Result
+                            searchPhrase={this.state.searchPhrase}
+                            clearSearch={this.clearSearch}
+                            result={this.props.result}
+                            error={this.props.error}
+                            isLoading={this.props.isLoading}
+                            input={this.input}
+                            />}
+                         />
+                        <Route path="/footer" render={props => <Footer text={this.state.footerText}/>} />
+                        <Route component={Error}/>
+                    </Switch>
+                </Router>
+            </Provider>
         );
     }
 }

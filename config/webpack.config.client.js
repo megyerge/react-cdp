@@ -9,7 +9,6 @@ const isDevMod = process.env.NODE_ENV === 'development';
 module.exports = merge(common, {
   name: 'client',
   target: 'web',
-
   entry: [
     isDevMod && 'webpack-hot-middleware/client',
     './src/client.jsx',
@@ -18,5 +17,8 @@ module.exports = merge(common, {
   plugins: [
     !isDevMod && new CleanWebpackPlugin('./public', { root: path.resolve(__dirname, '../') }),
     isDevMod && new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+        'process.env.BROWSER': JSON.stringify(true)
+    })
   ].filter(Boolean),
 });
